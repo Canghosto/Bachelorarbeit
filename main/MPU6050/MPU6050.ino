@@ -2,7 +2,6 @@
 #include "Adafruit_MPU6050.h"
 #include "Adafruit_Sensor.h"
 #include "MPU9250.h"
-
 #include "udpConnection.h"
 
 //Wifi Network
@@ -143,7 +142,7 @@ void setup(){
     delay(1000);
 
     //Setup the WiFi connection and check if wifi or cable is required
-    //udp.setupWiFi(ssid, pwd, ipAddress, udpPort, username);
+    udp.setupWiFi(ssid, pwd, ipAddress, udpPort, username);
     //udp.setupAsAP(ssid, pwd);
     
 

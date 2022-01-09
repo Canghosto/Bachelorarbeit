@@ -1,7 +1,7 @@
 #include "udpConnection.h"
 
-//#include "WiFiUdp.h"
-//#include "WiFi.h"
+#include "WiFiUdp.h"
+#include "WiFi.h"
 //#include "WebServer.h"
 //#include "DNSServer.h"
 
@@ -13,8 +13,6 @@ UDPCONNECTION::UDPCONNECTION()
   , accessPointStatus(false)
   {};
 
-
-/*
 void UDPCONNECTION::setupWiFi(const char* ssid,
                               const char* passphrase,
                               const IPAddress& ip,
@@ -44,11 +42,8 @@ void UDPCONNECTION::setupWiFi(const char* ssid,
         wifiConnected = false;
       }
   }
-
-  if(ssid == "eduroam"){
-    //TODO - Run the installation file from the Rechnerzentrum
-  }
 }
+/*
 void UDPCONNECTION::setupAsAP(const char* ssid,const char* passphrase = NULL){
   Serial.println("Setup microcontroller to a Access Point.");
   WiFi.mode(WIFI_AP);
@@ -98,13 +93,13 @@ uint8_t UDPCONNECTION::writeHeader(PACKET_ID imuPosition, uint8_t imuID){
 
 void UDPCONNECTION::sendBuffer(PACKET_ID imuPosition,uint8_t length){
   if(getStatusWifi() || getStatusAP()){
-    Serial.println(getStatusAP());
-    Serial.println(getStatusWifi());
-    //wifiUdp.beginPacket(ipAddress, ipPort);
-    //wifiUdp.printf(buffer, length);
-    //wifiUdp.endPacket();
+    wifiUdp.beginPacket(ipAddress, ipPort);
+    wifiUdp.printf(buffer, length);
+    wifiUdp.endPacket();
+    /*
     for (int i = 0; i < sizeof(buffer); i++) Serial.print(buffer[i]);
     Serial.println(" ");
+    */
   } else {
     //Serial.println(Serial.available());
     //if (Serial.available() > 0) {
