@@ -49,24 +49,7 @@ int seq = 0;
 
 //TCA Selector
 void tcaselect(uint8_t i) {
-  byte address = TCAADDR;
-  static byte previousAddress = 0x99;
-
-  while (i > 7) {
-    i -= 8;
-    address++;
-    }
-
-  if (address != previousAddress) {
-    if (previousAddress != 0x99) {
-      Wire.beginTransmission(previousAddress);
-      Wire.write(0);
-      Wire.endTransmission();
-      }
-    previousAddress = address;
-    }
-
-  Wire.beginTransmission(address);
+  Wire.beginTransmission(TCAADDR);
   Wire.write(1 << i);
   Wire.endTransmission();
 }
@@ -154,7 +137,7 @@ void identifyIMU(){
 void setup(){    
     Wire.begin();
     //Set the frequency to 400kHz
-    //Wire.setClock(4000000UL);
+    Wire.setClock(4000000UL);
     Serial.begin(115200);
     while (!Serial);
     delay(1000);
