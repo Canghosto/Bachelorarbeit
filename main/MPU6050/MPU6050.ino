@@ -5,9 +5,9 @@
 #include "udpConnection.h"
 
 //Wifi Network
-const char* ssid = "ssid";
+const char* ssid = "TP-LINK_D81C8A";
 const char* username = "@studium.com";
-const char* pwd = "pwd";
+const char* pwd = "04386087";
 
 //UDP Address to send Data to.
 const char* udpAddress = "eduroam";

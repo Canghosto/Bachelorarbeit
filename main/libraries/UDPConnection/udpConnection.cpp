@@ -58,10 +58,10 @@ void UDPCONNECTION::setupAsAP(const char* ssid,const char* passphrase = NULL){
 }
 */
 void UDPCONNECTION::sendImuData(PACKET_ID imuPosition, char* data , uint8_t imuID){
-    
+
     uint8_t count = writeHeader(imuPosition, imuID);
     if(imuPosition == 3){
-      
+
       palmBuffer[count++] = imuID;
       memcpy(palmBuffer + count, data, 90);
       count +=90;
@@ -94,7 +94,13 @@ uint8_t UDPCONNECTION::writeHeader(PACKET_ID imuPosition, uint8_t imuID){
 void UDPCONNECTION::sendBuffer(PACKET_ID imuPosition,uint8_t length){
   if(getStatusWifi() || getStatusAP()){
     wifiUdp.beginPacket(ipAddress, ipPort);
-    wifiUdp.printf(buffer, length);
+    if (imuPosition == PACKET_ID::palm)
+    {
+      wifiUdp.printf(palmBuffer, length);
+    }else{
+      wifiUdp.printf(buffer, length);
+
+    }
     wifiUdp.endPacket();
     /*
     for (int i = 0; i < sizeof(buffer); i++) Serial.print(buffer[i]);
@@ -114,7 +120,7 @@ void UDPCONNECTION::sendBuffer(PACKET_ID imuPosition,uint8_t length){
           Serial.println("");
         }
       //}
-    
+
   }
 }
 
