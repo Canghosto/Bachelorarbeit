@@ -17,12 +17,9 @@ IPAddress ipAddress(192,168,178,25);
 
 UDPCONNECTION udp;
 
-//char == int8_t
 char buffer[100];
 char palmBuffer[150];
 
-//int16_t AcX,AcY,AcZ,GyX,GyY,GyZ,MagX,MagY,MagZ;
-//sensors_event_t a, g, temp;
 UDPCONNECTION::PACKET_ID fingers = UDPCONNECTION::PACKET_ID::fingers;
 UDPCONNECTION::PACKET_ID thumb = UDPCONNECTION::PACKET_ID::thumb;
 UDPCONNECTION::PACKET_ID palm = UDPCONNECTION::PACKET_ID::palm;
@@ -154,7 +151,10 @@ void identifyIMU(){
 
 
 // Standard Arduino setup()
-void setup(){
+void setup(){    
+    Wire.begin();
+    //Set the frequency to 400kHz
+    //Wire.setClock(4000000UL);
     Serial.begin(115200);
     while (!Serial);
     delay(1000);
@@ -163,9 +163,7 @@ void setup(){
     //udp.setupWiFi(ssid, pwd, ipAddress, udpPort, username);
     //udp.setupAsAP(ssid, pwd);
     
-    Wire.begin();
-    //Set the frequency to 400kHz
-    Wire.setClock(4000000UL);
+
     Serial.println("\nTCAScanner ready!");
     
     setting9250.accel_fs_sel = ACCEL_FS_SEL::A16G;
@@ -185,7 +183,7 @@ void setup(){
 sensors_event_t a, g, temp;
 
 bool readMPUFinger(uint8_t port, char* buf, int seq){
-  
+  memset(&buffer[0], 0, sizeof(buffer));
   mpuFinger[port].getEvent(&a, &g, &temp);
   sprintf(buf, "%d %d accel %0.3f %0.3f %0.3f gyro %0.3f %0.3f %0.3f  "
              , seq, port
@@ -217,18 +215,6 @@ bool readMPUThumb(uint8_t port, char* buf, int seq){
              , seq, port
              , a.acceleration.x, a.acceleration.y, a.acceleration.z
              , g.gyro.x, g.gyro.y, g.gyro.z);
-  //Serial.println(buf);
-
-  /* Print out the values */
-  //Serial.print("IMU Port: ");Serial.println(port);
-  //Serial.print("Acceleration X: ");
-  //Serial.print(a.acceleration.x);
-  //Serial.print(", Y: ");
-  //Serial.print(a.acceleration.y);
-
-  //Serial.print("Rotation X: ");Serial.print(g.gyro.x);
-  //Serial.print(", Y: ");Serial.print(g.gyro.y);
-  //Serial.println(" rad/s");
   return true;
 }
 
@@ -240,31 +226,6 @@ bool readMPUCore(uint8_t port, char* buf, int seq){
                  , coreMPU.getLinearAccX(), coreMPU.getLinearAccY(),coreMPU.getLinearAccZ()
                  , coreMPU.getGyroX(), coreMPU.getGyroY(), coreMPU.getGyroZ()
                  , coreMPU.getMagX(), coreMPU.getMagY(), coreMPU.getMagZ());
-                 
-  //Serial.println(buf);
-  /*
-  Serial.println(buf);
-  Serial.print("Yaw, Pitch, Roll: ");
-  Serial.print(coreMPU.getGyroX(), 2);
-  Serial.print(", ");
-  Serial.print(coreMPU.getGyroY(), 2);
-  Serial.print(", ");
-  Serial.print(coreMPU.getGyroZ(), 2);
-  Serial.print("  ");
-  Serial.print("Mag : ");
-  Serial.print(coreMPU.getMagX(), 2);
-  Serial.print(", ");
-  Serial.print(coreMPU.getMagY(), 2);
-  Serial.print(", ");
-  Serial.print(coreMPU.getMagZ(), 2);
-  Serial.print(", ");
-  Serial.print("lin_acc = ");
-  Serial.print(coreMPU.getLinearAccX(), 2);
-  Serial.print(", ");
-  Serial.print(coreMPU.getLinearAccY(), 2);
-  Serial.print(", ");
-  Serial.println(coreMPU.getLinearAccZ(), 2);
-  */
   }
   coreMPU.update();
   return true;
